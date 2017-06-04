@@ -66,7 +66,7 @@ core.register_chatcommand("set_colour", {
 	description = core.gettext("Change chat colour"),
 	func = function(colour)
 		modstorage:set_string("colour", colour)
-	return true, "Chat colour changed."
+		return true, "Chat colour changed."
 	end,
 })
 
@@ -84,4 +84,12 @@ core.register_chatcommand("rainbow", {
 		say(output)
 		return true
 end,
+})
+
+core.register_chatcommand("say", {
+	description = core.gettext("Send text without applying colour to it"),
+	func = function(text)
+		say(text)
+		return true
+	end,
 })
