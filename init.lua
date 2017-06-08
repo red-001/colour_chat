@@ -46,7 +46,19 @@ local function color_from_hue(hue)
 	end
 end
 
+local function canTalk()
+	if core.get_privilege_list then
+		return core.get_privilege_list().shout
+	else
+		return true
+	end
+end
+
 local function say(message)
+	if not canTalk() then
+		minetest.display_chat_message("You need 'shout' in order to talk")
+		return
+	end
 	minetest.send_chat_message(message)
 	if minetest.get_server_info().protocol_version < 29 then
 		local name = minetest.localplayer:get_name()
@@ -74,6 +86,9 @@ core.register_chatcommand("set_colour", {
 core.register_chatcommand("rainbow", {
 	description = core.gettext("rainbow text"),
 	func = function(param)
+		if not canTalk() then
+			return false, "You need 'shout' in order to use this command"
+		end
 		step = 360 / param:len()
  		local hue = 0
      		 -- iterate the whole 360 degrees
