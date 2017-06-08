@@ -89,12 +89,17 @@ core.register_chatcommand("rainbow", {
 		if not canTalk() then
 			return false, "You need 'shout' in order to use this command"
 		end
-		step = 360 / param:len()
+		local step = 360 / param:len()
  		local hue = 0
      		 -- iterate the whole 360 degrees
 		local output = ""
       		for i = 1, param:len() do
-        		output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) ..  param:sub(i,i)
+			local char = param:sub(i,i)
+			if char:match("%s") then
+				output = output .. char
+			else
+        			output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) .. char 
+			end
         		hue = hue + step
 		end
 		say(output)
