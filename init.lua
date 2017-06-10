@@ -1,5 +1,10 @@
 local modstorage = core.get_mod_storage()
 
+local register_on_message = core.register_on_sending_chat_message
+if core.register_on_sending_chat_messages then
+	register_on_message = core.register_on_sending_chat_messages
+end
+
 local function rgb_to_hex(rgb)
 	local hexadecimal = '#'
 
@@ -66,7 +71,7 @@ local function say(message)
 	end
 end
 
-minetest.register_on_sending_chat_messages(function(message)
+register_on_message(function(message)
 	if message:sub(1,1) == "/" or modstorage:get_string("colour") == "" then
 		return false
 	end
