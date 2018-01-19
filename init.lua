@@ -72,7 +72,7 @@ local function say(message)
 end
 
 register_on_message(function(message)
-	if message:sub(1,1) == "/" or modstorage:get_string("colour") == "" then
+	if message:sub(1,1) == "/" or modstorage:get_string("colour") == "" or modstorage:get_string("colour") == "white" then
 		return false
 	end
 
