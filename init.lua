@@ -75,6 +75,9 @@ register_on_message(function(message)
 	if message:sub(1,1) == "/" or modstorage:get_string("colour") == "" or modstorage:get_string("colour") == "white" then
 		return false
 	end
+  local atname, msg=string.match(message, "^@([^%s:]*)[%s:](.*)")
+  if atname and msg then message = msg end
+
 	if modstorage:get_string("colour") == "rainbow" then
 		local step = 360 / message:len()
  		local hue = 0
@@ -89,8 +92,14 @@ register_on_message(function(message)
 			end
         		hue = hue + step
 		end
-		say(output)
-	else say(core.get_color_escape_sequence(modstorage:get_string("colour")) .. message)
+    if atname and msg then
+		  say("@"..atname .." ".. output)
+    else say(output)
+    end
+	elseif atname and msg then
+		say("@"..atname .." ".. core.colorize(modstorage:get_string("colour"), message))
+	else
+		say(core.get_color_escape_sequence(modstorage:get_string("colour")) .. message)
 	end
 	return true
 end)
