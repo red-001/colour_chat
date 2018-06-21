@@ -75,8 +75,32 @@ register_on_message(function(message)
 	if message:sub(1,1) == "/" or modstorage:get_string("colour") == "" or modstorage:get_string("colour") == "white" then
 		return false
 	end
+  local atname, msg=string.match(message, "^@([^%s:]*)[%s:](.*)")
+  if atname and msg then message = msg end
 
-	say(core.get_color_escape_sequence(modstorage:get_string("colour")) .. message)
+	if modstorage:get_string("colour") == "rainbow" then
+		local step = 360 / message:len()
+ 		local hue = 0
+     		 -- iterate the whole 360 degrees
+		local output = ""
+      		for i = 1, message:len() do
+			local char = message:sub(i,i)
+			if char:match("%s") then
+				output = output .. char
+			else
+        			output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) .. char 
+			end
+        		hue = hue + step
+		end
+    if atname and msg then
+		  say("@"..atname .." ".. output)
+    else say(output)
+    end
+	elseif atname and msg then
+		say("@"..atname .." ".. core.colorize(modstorage:get_string("colour"), message))
+	else
+		say(core.get_color_escape_sequence(modstorage:get_string("colour")) .. message)
+	end
 	return true
 end)
 
