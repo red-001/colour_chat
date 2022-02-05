@@ -79,7 +79,7 @@ register_on_message(function(message)
       local atname, msg=string.match(message, "^@([^%s:]*)[%s:](.*)")
   if atname and msg then message = msg end
 	if modstorage:get_string("colour") == "rainbow" then
-		local step = 360 / message:len()
+		local step = 90 / message:len()
  		local hue = 0
      		 -- iterate the whole 360 degrees
 		local output = ""
