@@ -61,7 +61,7 @@ end
 
 local function say(message)
 	if not canTalk() then
-		minetest.display_chat_message("You need 'shout' in order to talk")
+		minetest.display_chat_message("You need 'shout' in order to talk.")
 		return
 	end
 	minetest.send_chat_message(message)
@@ -75,13 +75,37 @@ register_on_message(function(message)
 	if message:sub(1,1) == "/" or modstorage:get_string("colour") == "" or modstorage:get_string("colour") == "white" then
 		return false
 	end
-
-	say(core.get_color_escape_sequence(modstorage:get_string("colour")) .. message)
+-- using commit https://github.com/red-001/colour_chat/pull/3/files from Lejo1
+      local atname, msg=string.match(message, "^@([^%s:]*)[%s:](.*)")
+  if atname and msg then message = msg end
+	if modstorage:get_string("colour") == "rainbow" then
+		local step = 90 / message:len()
+ 		local hue = 0
+     		 -- iterate the whole 360 degrees
+		local output = ""
+      		for i = 1, message:len() do
+			local char = message:sub(i,i)
+			if char:match("%s") then
+				output = output .. char
+			else
+        			output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) .. char
+			end
+        		hue = hue + step
+		end
+    if atname and msg then
+		  say("@"..atname .." ".. output)
+    else say(output)
+    end
+	elseif atname and msg then
+		say("@"..atname .." ".. core.colorize(modstorage:get_string("colour"), message))
+	else
+		say(core.get_color_escape_sequence(modstorage:get_string("colour")) .. message)
+	end
 	return true
 end)
 
 core.register_chatcommand("set_colour", {
-	description = core.gettext("Change chat colour"),
+	description = core.gettext("Change default session sent chat colour."),
 	func = function(colour)
 		modstorage:set_string("colour", colour)
 		return true, "Chat colour changed."
@@ -89,10 +113,10 @@ core.register_chatcommand("set_colour", {
 })
 
 core.register_chatcommand("rainbow", {
-	description = core.gettext("rainbow text"),
+	description = core.gettext("Abrupt rainbow text transition."),
 	func = function(param)
 		if not canTalk() then
-			return false, "You need 'shout' in order to use this command"
+			return false, "You need 'shout' in order to use this command."
 		end
 		local step = 360 / param:len()
  		local hue = 0
@@ -112,8 +136,152 @@ core.register_chatcommand("rainbow", {
 end,
 })
 
+core.register_chatcommand("rainbow_smooth", {
+	description = core.gettext("Smooth rainbow text from red."),
+	func = function(param)
+		if not canTalk() then
+			return false, "You need 'shout' in order to use this command."
+		end
+		local step = 90 / param:len()
+ 		local hue = 0
+     		 -- iterate 1/4 of 360 degrees (default 360)
+		local output = ""
+      		for i = 1, param:len() do
+			local char = param:sub(i,i)
+			if char:match("%s") then
+				output = output .. char
+			else
+        			output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) .. char
+			end
+        		hue = hue + step
+		end
+		say(output)
+		return true
+end,
+})
+
+core.register_chatcommand("rainbow_smooth_yellow", {
+	description = core.gettext("Smooth rainbow text from yellow."),
+	func = function(param)
+		if not canTalk() then
+			return false, "You need 'shout' in order to use this command."
+		end
+		local step = 90 / param:len()
+ 		local hue = 60
+     		 -- iterate 1/4 of 360 degrees
+		local output = ""
+      		for i = 1, param:len() do
+			local char = param:sub(i,i)
+			if char:match("%s") then
+				output = output .. char
+			else
+        			output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) .. char
+			end
+        		hue = hue + step
+		end
+		say(output)
+		return true
+end,
+})
+
+core.register_chatcommand("rainbow_smooth_green", {
+	description = core.gettext("Smooth rainbow text from green."),
+	func = function(param)
+		if not canTalk() then
+			return false, "You need 'shout' in order to use this command."
+		end
+		local step = 90 / param:len()
+ 		local hue = 120
+     		 -- iterate 1/4 of 360 degrees
+		local output = ""
+      		for i = 1, param:len() do
+			local char = param:sub(i,i)
+			if char:match("%s") then
+				output = output .. char
+			else
+        			output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) .. char
+			end
+        		hue = hue + step
+		end
+		say(output)
+		return true
+end,
+})
+
+core.register_chatcommand("rainbow_smooth_cyan", {
+	description = core.gettext("Smooth rainbow text from cyan."),
+	func = function(param)
+		if not canTalk() then
+			return false, "You need 'shout' in order to use this command."
+		end
+		local step = 90 / param:len()
+ 		local hue = 170
+     		 -- iterate 1/4 of 360 degrees
+		local output = ""
+      		for i = 1, param:len() do
+			local char = param:sub(i,i)
+			if char:match("%s") then
+				output = output .. char
+			else
+        			output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) .. char
+			end
+        		hue = hue + step
+		end
+		say(output)
+		return true
+end,
+})
+
+core.register_chatcommand("rainbow_smooth_blue", {
+	description = core.gettext("Smooth rainbow text from blue."),
+	func = function(param)
+		if not canTalk() then
+			return false, "You need 'shout' in order to use this command."
+		end
+		local step = 90 / param:len()
+ 		local hue = 240
+     		 -- iterate 1/4 of 360 degrees
+		local output = ""
+      		for i = 1, param:len() do
+			local char = param:sub(i,i)
+			if char:match("%s") then
+				output = output .. char
+			else
+        			output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) .. char
+			end
+        		hue = hue + step
+		end
+		say(output)
+		return true
+end,
+})
+
+core.register_chatcommand("rainbow_smooth_purple", {
+	description = core.gettext("Smooth rainbow text from purple/pink."),
+	func = function(param)
+		if not canTalk() then
+			return false, "You need 'shout' in order to use this command."
+		end
+		local step = 90 / param:len()
+ 		local hue = 300
+     		 -- iterate 1/4 of 360 degrees
+		local output = ""
+      		for i = 1, param:len() do
+			local char = param:sub(i,i)
+			if char:match("%s") then
+				output = output .. char
+			else
+        			output = output  .. core.get_color_escape_sequence(color_from_hue(hue)) .. char
+			end
+        		hue = hue + step
+		end
+		say(output)
+		return true
+end,
+})
+
 core.register_chatcommand("say", {
-	description = core.gettext("Send text without applying colour to it"),
+	description = core.gettext("Send text without configured color characters appended."),
 	func = function(text)
 		say(text)
 		return true
